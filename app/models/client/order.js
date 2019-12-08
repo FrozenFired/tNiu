@@ -27,8 +27,10 @@ let dbSchema = new Schema({
 		code: String,
 		color: String,
 		extent: Float,	// 长度
+		ship: Float,	// 长度
 	}],
-	extent: Float,
+	ship: Float,
+	imp: Float,
 });
 
 dbSchema.pre('save', function(next) {	

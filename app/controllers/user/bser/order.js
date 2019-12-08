@@ -23,6 +23,7 @@ exports.bsOrder = function(req, res) {
 			info = "bsOrders, Order.findOne, Error";
 			Err.usError(req, res, info);
 		} else {
+			// console.log(order)
 			res.render('./user/bser/order/detail', {
 				title : '订单列表',
 				crUser: crUser,
@@ -42,6 +43,14 @@ exports.bsOrderEnd = function(req, res) {
 			Err.usError(req, res, info);
 		} else {
 			order.status = 1;
+			let ship = 0;
+			for(iCl in order.colors) {
+				if(!isNaN(parseInt(order.colors[iCl].ship))) {
+					ship += parseInt(order.colors[iCl].ship);
+				}
+			}
+			order.ship = parseInt(ship);
+			order.imp = ship * parseFloat(order.price);
 			order.edAt = Date.now();
 			order.save(function(err, objSv) {
 				if(err) console.log(err);
@@ -173,5 +182,32 @@ exports.bsOrderNew = function(req, res) {
 			if(err) console.log(err);
 			res.redirect('/bsOrders')
 		})
+	})
+}
+
+exports.bsOrderClUpAjax = function(req, res) {
+	let ship = parseInt(req.query.ship)
+	let orderId = req.query.orderId
+	let colorId = req.query.colorId
+
+	Order.findOne({_id: orderId})
+	.exec(function(err, order) {
+		if(err) console.log(err);
+		let flag = 0;
+		for(iCl in order.colors) {
+			if(order.colors[iCl]._id == colorId) {
+				order.colors[iCl].ship = ship;
+				flag = 1;
+				break;
+			}
+		}
+		if(flag == 0) {
+			res.json({result: 0})
+		} else {
+			order.save(function(err, orderSave) {
+				if(err) console.log(err);
+				res.json({result: 1})
+			})
+		}
 	})
 }
