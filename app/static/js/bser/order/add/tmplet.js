@@ -82,7 +82,7 @@ $( function() {
 						str += tmplet.code+color.code;
 					str += '</label>';
 					str += '<input type="hidden" name="obj[colors]['+iCl;
-					str += '][code]" value='+tmplet.code+color.code+'>';
+					str += '][code]" value='+tmplet.code+'V'+color.code+'>';
 
 					str += '<label class="col-4 col-form-label text-center">';
 						str += color.color;
