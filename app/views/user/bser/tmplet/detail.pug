@@ -1,0 +1,51 @@
+extends ../aalayout/layout
+
+block content
+
+	.container
+		.border.bg-secondary.pt-2
+			.row
+				.col-lg-4
+					.row.p-5
+						.col-lg-12.mt-2
+							span #{tmplet.code}
+						.col-lg-12.mt-2
+							span #{tmplet.codeNum}
+						.col-lg-12.mt-2
+							span #{tmplet.nome}
+						.col-lg-12.mt-2
+							span #{tmplet.note}
+				.col-lg-8.text-center
+					.row
+						#imgClick.col-4
+							.imgSmall
+								img(src=dns+tmplet.photo, width="100%", style="max-width: 450px")
+		.row.my-4
+			.col-10
+				button.btn.btn-warning#addColor(type="button") 添加颜色
+				input#colors(type="hidden", value=tmplet.colors)
+			.col-2
+				button.btn.btn-danger#delColor(type="button") 删除颜色
+		form#formAdd(method="post", action="/bsTmpletAddColorAjax", style="display:none")
+			input(type="hidden", name="tmpletId", value=tmplet._id)
+			.form-group.row
+				label.col-2.col-form-label.text-right(for="codeIpt") code
+				.col-3
+					input#codeIpt.form-control(type="number", name="color[code]")
+				label.col-2.col-form-label.text-right(for="colorIpt") 颜色
+				.col-3
+					input#colorIpt.form-control(type="text", name="color[color]")
+				.col-2.text-right
+					button.btn.btn-success#btnAdd(type="button") 添加
+		each color in tmplet.colors
+			-a;
+			.row.my-2
+				.col-10
+					h4 #{color.code} : #{color.color}
+				.col-2
+					form.formDel(id="formDel-"+color._id method="post", action="/bsTmpletDelColorAjax", style="display:none")
+						input(type="hidden", name="tmpletId", value=tmplet._id)
+						input(type="hidden", name="colorId", value=color._id)
+					button.btn.btn-danger.btnDel(type="button", data-id=color._id, style="display:none") 删除
+
+	script(src="/js/bser/tmplet/detail.js")

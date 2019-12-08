@@ -1,0 +1,29 @@
+.row
+	.col-6
+		table.table
+			thead
+				tr
+					th.border.border-dark 型号
+					th.border.border-dark 颜色
+					th.border.border-dark 米数
+			tbody
+				- let extents = 0, iTr=0;
+				each color in order.colors
+					- iTr++;
+					if !isNaN(parseInt(color.extent))
+						-extents += parseInt(color.extent);
+					tr
+						td.border.border-dark #{color.code}
+						td.border.border-dark #{color.color}
+						td.border.border-dark #{color.extent}
+				while iTr < 5
+					-iTr++;
+					tr
+						td.border.border-dark &nbsp;
+						td.border.border-dark
+						td.border.border-dark
+				tr
+					td(colspan=2)
+					td.border.border-dark #{extents}
+	.col-6.text-center
+		img(src=order.tmplet.photo, width="400px")

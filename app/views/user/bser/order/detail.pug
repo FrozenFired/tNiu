@@ -1,0 +1,28 @@
+extends ../aalayout/layout
+
+block content
+	div(style="height:50px")
+	.container.mt-3
+		.head
+			include ./detail/head
+		.basic.mt-3.border.p-3.pt-4
+			include ./detail/basic
+		.tmplet.mt-3
+			include ./detail/tmplet
+		.foot.mt-3
+			include ./detail/foot
+
+	.topNav-second.pt-2.noprint
+		.row.text-center
+			.col-3
+				a.btn.btn-danger(href="/bsOrderDel/"+order._id) 删除
+			.col-3
+			.col-3 
+				if order.status == 0
+					-a;
+					a.btn.btn-warning(href="/bsOrderEnd/"+order._id) 发货
+				else
+					button.btn.btn-sencondary(type="button") 已经发货
+			.col-3#print
+				button.btn.btn-link.btn-block(type="button") <span class="oi oi-print"></span>
+	script(src="/js/bser/order/detail/detail.js")

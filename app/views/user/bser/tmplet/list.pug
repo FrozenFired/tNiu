@@ -1,0 +1,47 @@
+extends ../aalayout/layout
+
+block content
+	div(style="height:50px")
+
+	.container.mt-3
+		.row
+			each tmplet in tmplets
+				-a;
+				.col-sm-12.col-md-6.col-xl-4
+					.card.mt-3.singleday.bg-light(id="card-"+tmplet._id)
+						a.btn.btn-default.text-dark(href="/bsTmplet/"+tmplet._id)
+							.row
+								.col-6.text-left
+										h4(class=txtSatus) #{tmplet.code}
+								.col-6.text-right
+										h4(class=txtSatus) #{tmplet.codeNum}
+							.row.text-left
+								.col-12
+									h4 #{tmplet.nome}
+								.col-lg-4.text-center
+								//- .col-4 T.Art: #{tmplet.arts}
+							if tmplet.colors
+								-colors = tmplet.colors;
+								.row
+									each color in colors
+										-a;
+										.col-3.text-right #{color.code}:
+										.col-3.text-left #{color.color}
+							if tmplet.note
+								-let note = tmplet.note;
+								.row
+									.col-12.text-warning.text-left 备注: #{note}
+
+						.row.multyDel(style="display:none")
+							.col-12.text-right
+								a.btn.btn-danger(href="/bsTmpletDel/"+tmplet._id) Del
+	.topNav-second.p-1
+		.row.text-right
+			.col-8.col-md-6.col-lg-4
+				form.ajaxForm
+					input.ajaxKey.productcode.form-control(type="text", autocomplete="off")
+			.col-2.offset-md-4.offset-lg-6.col-md-1
+				a.btn.btn-warning.btn-block(href="/bsTmpletAdd") <span class="oi oi-plus"></span>
+			.col-1.col-md-1
+				button.btn.btn-info.shield(type="button") <span class="oi oi-shield"></span>
+	script(src="/js/bser/tmplet/list.js")

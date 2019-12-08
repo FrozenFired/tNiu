@@ -1,0 +1,57 @@
+extends ../aalayout/layout
+
+block content
+	.container.mt-3
+		.row
+			.col-12.col-md-4.mt-4
+				#prodPage
+
+				h3#clientBtn client
+				#clientPage.border.p-3
+					.row.mt-3
+						.col-4
+							h3 客户:
+						.col-8
+							form#formCters
+								input#ajaxCters.form-control(type="text", autocomplete="off")
+					.clientSel
+						.row.catersAjax
+						hr
+						.row.allCtersAjax
+				#tmpletImg.mt-3
+			.col-12.col-md-8.mt-4
+				form#form(method="post", action="/bsOrderNew", enctype="multipart/form-data")
+					input#cterId(type="hidden", name="obj[cter]")
+					.form-group.row
+						label.col-2.col-form-label.text-right#codeLab(for="drapIpt") 面料
+						.col-10.col-sm-4
+							input#drapIpt.form-control(type="text", name="obj[drap]")
+						label.col-2.col-form-label.text-right#codeNumLab(for="widthIpt") 门幅
+						.col-10.col-sm-4
+							input#widthIpt.form-control(type="text", name="obj[width]")
+					.form-group.row
+						label.col-2.col-form-label.text-right(for="noteIpt") 备注
+						.col-10
+							input#noteIpt.form-control(type="text", name="obj[note]")
+					.form-group.row
+						label.col-2.col-form-label.text-right(for="tmpletIpt") 模板
+						.col-4
+							input#ajaxTmplet.form-control(type="text", autocomplete="off")
+							input#tmpletId(type="hidden", name="obj[tmplet]")
+						label.col-2.col-form-label.text-right(for="genreIpt") 类型
+						.col-4
+							select#genreIpt.form-control(data-style="btn-info")
+								option(value=' - ') 请选择类型
+								each genre in genres
+									- a;
+									option(value=genre.genre+'-'+genre.price) #{genre.genre}: #{genre.price}€
+						input#genre(type="hidden", name="obj[genre]")
+						input#price(type="hidden", name="obj[price]")
+					#tmplets
+					#tmpletCls
+					.form-group.row.mt-5
+						.offset-sm-10.col-sm-2
+							input.btn.btn-success.btn-block(type="submit" value="添加")
+	script(src="/js/bser/order/add/add.js")
+	script(src="/js/bser/order/add/client.js")
+	script(src="/js/bser/order/add/tmplet.js")

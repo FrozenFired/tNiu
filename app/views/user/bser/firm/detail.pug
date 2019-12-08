@@ -1,0 +1,37 @@
+extends ../aalayout/layout
+
+block content
+	.container.mt-3
+		.row
+			.col-12.text-right
+				include ./detail/upInfo
+			.col-12
+				include ./detail/thisInfo
+		.row.my-4
+			.col-10
+				button.btn.btn-warning#addGenre(type="button") 添加类型
+				input#genres(type="hidden", value=firm.genres)
+			.col-2
+				button.btn.btn-danger#delGenre(type="button") 删除类型
+		form#formAdd(method="post", action="/bsFirmAddGenreAjax", style="display:none")
+			input(type="hidden", name="firmId", value=firm._id)
+			.form-group.row
+				label.col-2.col-form-label.text-right(for="genreIpt") 类型
+				.col-3
+					input#genreIpt.form-control(type="text", name="genre[genre]")
+				label.col-2.col-form-label.text-right(for="priceIpt") price
+				.col-3
+					input#priceIpt.form-control(type="test", name="genre[price]")
+				.col-2.text-right
+					button.btn.btn-success#btnAdd(type="button") 添加
+		each genre in firm.genres
+			-a;
+			.row.my-2
+				.col-10
+					h4 #{genre.genre} : #{genre.price}
+				.col-2
+					form.formDel(id="formDel-"+genre._id method="post", action="/bsFirmDelGenreAjax", style="display:none")
+						input(type="hidden", name="firmId", value=firm._id)
+						input(type="hidden", name="genreId", value=genre._id)
+					button.btn.btn-danger.btnDel(type="button", data-id=genre._id, style="display:none") 删除
+	script(src="/js/bser/company/detail.js")

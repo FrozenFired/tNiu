@@ -1,0 +1,35 @@
+extends ../aalayout/layout
+
+block content
+	.container.mt-3
+		.row
+			.col-12
+				h3 #{title}
+		hr
+		form#form(method="post", action="/bsTmpletNew", enctype="multipart/form-data")
+			input(type="hidden", name="obj[photoDir]", value=Conf.photoPath.proPhoto)
+			.row.my-3
+				.col-12(align="center")
+					img#crtImg.rounded-circle(src=dns+"/imgs/createPicture.jpg", width="200px")
+			.form-group.row.udPhoto(style="display:none")
+				input#uploadPhoto.btn.btn-info.btn-block(type="file", name="uploadPhoto")
+
+			.form-group.row
+				label.col-2.col-form-label.text-right#codeLab(for="codeIpt") 代号
+				.col-4
+					input#codeIpt.form-control(type="text", name="obj[code]")
+				label.col-2.col-form-label.text-right#codeNumLab(for="codeNumIpt") 数字
+				.col-4
+					input#codeNumIpt.form-control(type="number", name="obj[codeNum]")
+			.form-group.row
+				label.col-2.col-form-label.text-right#nomeLab(for="nomeIpt") 名称
+				.col-10.col-sm-4
+					input#nomeIpt.form-control(type="text", name="obj[nome]")
+			form-group.row
+				label.col-2.col-form-label.text-right(for="noteIpt") 备注
+				.col-10
+					input#noteIpt.form-control(type="text", name="obj[note]")
+			.form-group.row.mt-5
+				.offset-sm-10.col-sm-2
+					input.btn.btn-success.btn-block(type="submit" value="添加")
+	script(src="/js/bser/tmplet/add.js")
