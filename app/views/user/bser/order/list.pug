@@ -24,7 +24,11 @@ block content
 						each color in order.colors
 							-a;
 							.col-6.col-md-4
-								span [#{color.code} #{color.color} #{color.extent}米]
+								if order.status == 0
+									-a;
+									span.text-info [#{color.code} #{color.color} #{color.extent}米]
+								else
+									span.text-warning [#{color.code} #{color.color} #{color.ship}米]
 
 	.topNav-second.p-1
 		.row.text-right
