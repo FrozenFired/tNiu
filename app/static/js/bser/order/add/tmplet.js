@@ -73,7 +73,8 @@ $( function() {
 				str += '<h3 text-info>'+tmplet.nome+'</h3>';
 				str += '</div>';
 			str += '</div>';
-
+			str += '<input type="hidden" name="obj[tcode]" value='+tmplet.code+'>';
+			str += '<input type="hidden" name="obj[photo]" value='+tmplet.photo+'>';
 			str += '<hr/>';
 			for(let iCl in tmplet.colors) {
 				let color = tmplet.colors[iCl];

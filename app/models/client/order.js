@@ -23,6 +23,8 @@ let dbSchema = new Schema({
 	note: String,	// 备注
 
 	tmplet: {type: ObjectId, ref: 'Tmplet'},
+	tcode: String,
+	photo: String,
 	colors: [{
 		code: String,
 		color: String,
