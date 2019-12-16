@@ -80,7 +80,7 @@ $( function() {
 				let color = tmplet.colors[iCl];
 				str += '<div class="form-group row">'
 					str += '<label class="col-4 col-form-label text-center">';
-						str += tmplet.code+color.code;
+						str += tmplet.code+'V'+color.code;
 					str += '</label>';
 					str += '<input type="hidden" name="obj[colors]['+iCl;
 					str += '][code]" value='+tmplet.code+'V'+color.code+'>';
