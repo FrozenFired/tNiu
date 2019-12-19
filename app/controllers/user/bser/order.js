@@ -78,19 +78,33 @@ exports.bsOrders = function(req, res) {
 	let crUser = req.session.crUser;
 
 	let symSts = '$eq';
-	if(req.query.status && req.query.status == 1) {
-		symSts = '$ne';
+	let condSts = 0;
+	if(req.query.status) {
+		if(req.query.status == 1) {
+			condSts = 1
+		} else if(req.query.status == 0) {
+			condSts = 0;
+		} else if(req.query.status == -1) {
+			symSts = '$ne';
+			condSts = -1;
+		}
 	}
 
 	let randNum = 1546484;
-	let symAtFm = "$ne";
-	let condAtFm = randNum;
+	let symAtFm = "$gte";
+	let condAtFm = new Date(new Date().setHours(0, 0, 0, 0))
+	let symAtTo = "$lte";
+	let condAtTo = new Date(new Date().setHours(23, 59, 59, 0)) 
+	if(condSts == 0) {
+		symAtFm = "$ne";
+		condAtFm = randNum;
+		symAtTo = "$ne";
+		condAtTo = randNum;
+	}
 	if(req.query.atFm && req.query.atFm.length == 10){
 		symAtFm = "$gte";   // $ ne eq gte gt lte lt
 		condAtFm = new Date(req.query.atFm).setHours(0,0,0,0);
 	}
-	let symAtTo = "$ne";
-	let condAtTo = randNum;
 	if(req.query.atTo && req.query.atTo.length == 10){
 		symAtTo = "$lte";
 		condAtTo = new Date(req.query.atTo).setHours(23,59,59,0);
@@ -98,7 +112,7 @@ exports.bsOrders = function(req, res) {
 
 	Order.find({
 		'firm': crUser.firm,
-		'status': {[symSts]: 0},
+		'status': {[symSts]: condSts},
 		'ctAt': {[symAtFm]: condAtFm, [symAtTo]: condAtTo},
 	})
 	.populate('cter', 'nome')
@@ -112,7 +126,8 @@ exports.bsOrders = function(req, res) {
 			res.render('./user/bser/order/list', {
 				title : '订单列表',
 				crUser: crUser,
-				orders : orders
+				orders : orders,
+				status : condSts,
 			});
 		}
 	})

@@ -15,15 +15,6 @@ $( function() {
 	$("#atTo").val(getUrlParam('atTo'))
 	/* --------- 根据URL参数 填充前端显示数值 ---------- */
 
-	$(".ordsts").click(function(e) {
-		let valStatus = getUrlParam('status')
-		if(valStatus == 1) {
-			window.location.href="/bsOrders";
-		} else {
-			window.location.href="/bsOrders?status=1";
-		}
-	})
-
 	/* ------------------------- 时间选择 -------------------------- */
 	$("#atFm").change(function(e) {
 		/* 优化：如果跟上次比较时间不变，可以不发生事件 */
@@ -86,6 +77,18 @@ $( function() {
 		window.location.href="/bsOrders?"+status+'&'+cter+'&'+atFm+'&atTo='+atTo;
 	})
 	/* ------------------------- 时间选择 -------------------------- */
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	/* ------------------------- Cter 选择 -------------------------- */

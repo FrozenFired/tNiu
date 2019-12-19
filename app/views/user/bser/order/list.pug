@@ -4,7 +4,19 @@ block content
 	div(style="height:50px")
 	div(style="height:50px")
 	.container
-		h1 order list
+		h1 
+			-let bg0 = bg1 =bgAll = "btn-secondary";
+			if status == 0
+				-bg0="btn-info";
+				span 未发货
+			else if status == 1
+				-bg1="btn-info";
+				span.text-secondary 已发货
+			else
+				-bgAll="btn-info";
+				span 全部
+		-let extents = 0;
+		-let imp = 0;
 		each order in orders
 			-a;
 			a(href="/bsOrder/"+order._id)
@@ -21,27 +33,40 @@ block content
 								-cter = order.cter;
 								h3 #{cter.nome}
 					.row
+						-let extentTot = 0;
 						each color in order.colors
-							-a;
+							if !isNaN(parseInt(color.extent)) && !isNaN(parseFloat(order.price))
+								-extents += parseInt(color.extent);
+								-extentTot += parseInt(color.extent);
 							.col-6.col-md-4
 								if order.status == 0
 									-a;
 									span.text-info [#{color.code} #{color.color} #{color.extent}米]
 								else
 									span.text-warning [#{color.code} #{color.color} #{color.ship}米]
+						.col-6.col-md-4: h4.text-warning 总米数： #{extentTot}
+						.col-6.col-md-4: h4.text-warning 总价格： #{(extentTot * order.price).toFixed(2)}
+
+						-imp += extentTot * order.price;
+		.row.mt-5
+			.col-6
+				h3 总米数： #{extents}
+			.col-6
+				h3 IMP: #{imp.toFixed(2)}
 
 	.topNav-second.p-1
 		.row.text-right
 			.col-2.col-md-1
-				button.btn.btn-info.ordsts(type="button")
-					span 未
-					span.text-dark <span class="oi oi-loop"></span>
-					span.text-dark 已
-			.col-6.col-md-5.col-lg-3
-				form.ajaxForm
+				a.btn.btn-block(class=bg0, href="/bsOrders") 未
+			.col-2.col-md-1
+				a.btn.btn-block(class=bg1, href="/bsOrders?status=1") 已
+			.col-2.col-md-1
+				a.btn.btn-block(class=bgAll, href="/bsOrders?status=-1") 全部已
+			.col-4.col-md-4
+				.ajaxForm
 					input.ajaxKey.productcode.form-control(type="text", autocomplete="off")
-			.col-2.offset-md-4.offset-lg-6.col-md-1
-				a.btn.btn-warning.btn-block(href="/bsOrderAdd") <span class="oi oi-plus"></span>
+			.col-1.offset-md-3.col-md-1
+				a.btn.btn-warning(href="/bsOrderAdd") <span class="oi oi-plus"></span>
 			.col-1.col-md-1
 				button.btn.btn-info.shield(type="button") <span class="oi oi-shield"></span>
 	.topNav-third.p-1
