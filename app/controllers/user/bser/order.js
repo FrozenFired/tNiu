@@ -77,6 +77,16 @@ exports.bsOrderDel = function(req, res) {
 exports.bsOrders = function(req, res) {
 	let crUser = req.session.crUser;
 
+	let keytype = "tcode", keyword = "";
+	if(req.query.keyword) keyword = req.query.keyword;
+
+	let symCter = '$ne';
+	let condCter = null;
+	if(req.query.cter) {
+		symCter = '$eq';
+		condCter = req.query.cter;
+	}
+
 	let symSts = '$eq';
 	let condSts = 0;
 	if(req.query.status) {
@@ -110,10 +120,24 @@ exports.bsOrders = function(req, res) {
 		condAtTo = new Date(req.query.atTo).setHours(23,59,59,0);
 	}
 
+	let symGenre = "$ne";
+	let condGenre = null;
+	if(req.query.genre && req.query.genre != 0) {
+		symGenre = "$eq";
+		condGenre = req.query.genre;
+	}
+
 	Order.find({
 		'firm': crUser.firm,
 		'status': {[symSts]: condSts},
+		'genre': {[symGenre]: condGenre},
+		'cter': {[symCter]: condCter},
 		'ctAt': {[symAtFm]: condAtFm, [symAtTo]: condAtTo},
+		// $or:[
+		// 	{'tcode': new RegExp(keyword + '.*')},
+		// 	{'colors.code': new RegExp(keyword + '.*')},
+		// ],
+		'colors.code': new RegExp(keyword + '.*'),
 	})
 	.populate('cter', 'nome')
 	.populate('tmplet')
@@ -123,12 +147,27 @@ exports.bsOrders = function(req, res) {
 			info = "bsOrders, User.find, Error";
 			Err.usError(req, res, info);
 		} else {
-			res.render('./user/bser/order/list', {
-				title : '订单列表',
-				crUser: crUser,
-				orders : orders,
-				status : condSts,
-			});
+			Firm.findOne({_id: crUser.firm})
+			.exec(function(err, firm) {
+				if(err) {
+					console.log(err);
+					info = "bsOrderAdd, Firm.findOne, Error!";
+					Err.usError(req, res, info);
+				} if(!firm || !firm.genres || firm.genres.length<0) {
+					console.log(firm)
+					info = "请在公司页面设置，染洗类型";
+					Err.usError(req, res, info);
+				} else {
+					res.render('./user/bser/order/list', {
+						title : '订单列表',
+						crUser: crUser,
+						orders : orders,
+						status : condSts,
+						genres: firm.genres,
+						condGenre: condGenre
+					});
+				}
+			})
 		}
 	})
 }

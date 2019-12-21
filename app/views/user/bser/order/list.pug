@@ -2,7 +2,6 @@ extends ../aalayout/layout
 
 block content
 	div(style="height:50px")
-	div(style="height:50px")
 	.container
 		h1 
 			-let bg0 = bg1 =bgAll = "btn-secondary";
@@ -19,68 +18,76 @@ block content
 		-let imp = 0;
 		each order in orders
 			-a;
-			a(href="/bsOrder/"+order._id)
-				.order.bg-light.text-dark.mt-3.p-3
-					.row
-						.col-12.col-md-4
-							h3 #{order.code}
-						.col-12.col-md-4
-							if order.tmplet
-								-tmplet = order.tmplet;
-								h3 #{tmplet.code} #{tmplet.nome}
-						.col-12.col-md-4
-							if order.cter
-								-cter = order.cter;
-								h3 #{cter.nome}
-					.row
-						-let extentTot = 0;
-						each color in order.colors
-							if !isNaN(parseInt(color.extent)) && !isNaN(parseFloat(order.price))
-								-extents += parseInt(color.extent);
-								-extentTot += parseInt(color.extent);
-							.col-6.col-md-4
-								if order.status == 0
-									-a;
-									span.text-info [#{color.code} #{color.color} #{color.extent}米]
-								else
-									span.text-warning [#{color.code} #{color.color} #{color.ship}米]
-						.col-6.col-md-4: h4.text-warning 总米数： #{extentTot}
-						.col-6.col-md-4: h4.text-warning 总价格： #{(extentTot * order.price).toFixed(2)}
+			.card.order.bg-light.text-dark.mt-3.p-3
+				.row
+					.col-12.col-md-4
+						a.btn.btn-default.text-dark(href="/bsOrder/"+order._id): h3 #{order.code}
+					.col-12.col-md-4
+						if order.tmplet
+							-tmplet = order.tmplet;
+							h3 #{tmplet.code} #{tmplet.nome}
+					.col-12.col-md-4
+						if order.cter
+							-cter = order.cter;
+							h3.toCter(id=order.code+'-'+cter._id) #{cter.nome}
+				.row
+					-let extentTot = 0;
+					each color in order.colors
+						if !isNaN(parseInt(color.extent)) && !isNaN(parseFloat(order.price))
+							-extents += parseInt(color.extent);
+							-extentTot += parseInt(color.extent);
+						.col-6.col-md-4
+							if order.status == 0
+								-a;
+								span.text-info [#{color.code} #{color.color} #{color.extent}米]
+							else
+								span.text-warning [#{color.code} #{color.color} #{color.ship}米]
+					.col-6.col-md-4: h4.text-warning 总米数： #{extentTot}
+					.col-6.col-md-4: h4.text-warning 总价格： #{(extentTot * order.price).toFixed(2)}
 
-						-imp += extentTot * order.price;
+					-imp += extentTot * order.price;
 		.row.mt-5
 			.col-6
 				h3 总米数： #{extents}
 			.col-6
-				h3 IMP: #{imp.toFixed(2)}
+				h3 总计: #{imp.toFixed(2)}
 
 	.topNav-second.p-1
-		.row.text-right
-			.col-2.col-md-1
-				a.btn.btn-block(class=bg0, href="/bsOrders") 未
-			.col-2.col-md-1
-				a.btn.btn-block(class=bg1, href="/bsOrders?status=1") 已
-			.col-2.col-md-1
-				a.btn.btn-block(class=bgAll, href="/bsOrders?status=-1") 全部已
-			.col-4.col-md-4
-				.ajaxForm
-					input.ajaxKey.productcode.form-control(type="text", autocomplete="off")
-			.col-1.offset-md-3.col-md-1
-				a.btn.btn-warning(href="/bsOrderAdd") <span class="oi oi-plus"></span>
-			.col-1.col-md-1
-				button.btn.btn-info.shield(type="button") <span class="oi oi-shield"></span>
-	.topNav-third.p-1
 		.row
-			.col-6.offset-md-4.col-md-4.offset-xl-6.col-xl-3
+			.col-md-2
+				a.btn(class=bg0, href="/bsOrders") 未
+				span &nbsp; &nbsp;
+				a.btn(class=bg1, href="/bsOrders?status=1") 已
+				span &nbsp; &nbsp;
+				a.btn(class=bgAll, href="/bsOrders?status=-1") 全部
+			.col-md-2
+				#ajaxForm
+					input#ajaxKey.productcode.form-control(type="text", autocomplete="off")
+			.col-md-1
+				select#genreSel.form-control(data-style="btn-info")
+					option(value=0) 类型
+					each genre in genres
+						- a;
+						if genre.genre == condGenre
+							-a;
+							option(value=genre.genre, selected="selected") #{genre.genre}
+						else
+							option(value=genre.genre) #{genre.genre}
+			.col-md-2.text-center.cncCter.pt-2 <span class="oi oi-person"></span>
+			.col-md-2
 				.input-group
 					input#atFm.datepicker.form-control(type="text",readonly="readonly", aria-label="Recipient's username", aria-describedby="basic-addon2")
 					.input-group-append
 							button.cncAt.btn.btn-outline-dark(type="button") X
-			.col-6.col-md-4.col-xl-3
+			.col-md-2
 				.input-group
 					input#atTo.datepicker.form-control(type="text", readonly="readonly")
 					.input-group-append
 							button.cncAt.btn.btn-outline-dark(type="button") X
+			.col-md-1.text-right
+				a.btn.btn-warning(href="/bsOrderAdd") <span class="oi oi-plus"></span>
+				span &nbsp; &nbsp;
+				button.btn.btn-info.shield(type="button") <span class="oi oi-shield"></span>
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	//- <link rel="stylesheet" href="/resources/demos/style.css">
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
