@@ -2,6 +2,7 @@ $( function() {
 	$(".datepicker").datepicker();
 
 	/* ------------------------------- 获取 url 中的参数 -------------------------------- */
+	let nowUrl = window.location.href;
 	function getUrlParam(name) {
 		let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
 		let r = window.location.search.substr(1).match(reg);  //匹配目标参数
@@ -86,44 +87,34 @@ $( function() {
 
 
 
+	let changeURLArg = function(url,arg,arg_val){
+		var pattern=arg+'=([^&]*)';
+		var replaceText=arg+'='+arg_val;
+		if(url.match(pattern)){
+			var tmp='/('+ arg+'=)([^&]*)/gi';
+			tmp=url.replace(eval(tmp),replaceText);
+			return tmp;
+		}else{
+			if(url.match('[\?]')){
+				return url+'&'+replaceText;
+			}else{
+				return url+'?'+replaceText;
+			}
+		}
+		return url+'\n'+arg+'\n'+arg_val;
+	}
+
+
+
 
 
 	/* ------------------------- 类型选择 -------------------------- */
 	$("#genreSel").change(function(e) {
 		let valGenre = $(this).val();
-
-		let abUrls = (window.location.href).split('?');
-		let bfUrl = abUrls[0]
-		if(abUrls.length == 1) {
-			window.location.href=bfUrl+'?genre='+valGenre;
-		} else {
-			let afterUrl = abUrls[1]
-			let genres = afterUrl.split('genre=');
-
-			let bfgenre = genres[0];
-			let afgenre = "";
-			if(genres.length > 1) {
-				params = genres[1].split('&')
-				if(params.length > 1) {
-					for(let i=1; i<genres.length; i++) {
-						afgenre += '&' + genres[i]
-					}
-				}
-			}
-
-			window.location.href=bfUrl+'?'+ bfgenre+ '&genre='+valGenre+afgenre;
-
-		}
+		let newUrl = changeURLArg(nowUrl, 'genre', valGenre)
+		window.location.href=newUrl;
 	})
 	/* ------------------------- 类型选择 -------------------------- */
-
-
-
-
-
-
-
-
 
 
 
@@ -134,9 +125,11 @@ $( function() {
 		if(valStatus) {
 			status = 'status='+valStatus
 		}
+		
 		let str = $(this).val().replace(/(\s*$)/g, "").replace( /^\s*/, '').toUpperCase();
 		let keyword = encodeURIComponent(str);	// 转化码
-		window.location.href="/bsOrders?"+status+"&keyword="+keyword;
+		let newUrl = changeURLArg(nowUrl, 'keyword', keyword)
+		window.location.href=newUrl;
 	})
 	/* ------------------------- 关键词筛选 -------------------------- */
 
