@@ -15,7 +15,6 @@ $( function() {
 	let init = function() {
 		$("#atFm").val(getUrlParam('atFm'))
 		$("#atTo").val(getUrlParam('atTo'))
-		$("#ajaxKey").val(getUrlParam('keyword'))
 	}
 	init();
 	/* --------- 根据URL参数 填充前端显示数值 ---------- */

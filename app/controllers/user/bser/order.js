@@ -164,7 +164,8 @@ exports.bsOrders = function(req, res) {
 						orders : orders,
 						status : condSts,
 						genres: firm.genres,
-						condGenre: condGenre
+						condGenre: condGenre,
+						keyword: keyword
 					});
 				}
 			})

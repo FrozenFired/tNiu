@@ -76,7 +76,7 @@ exports.bsCtersAjax = function(req, res) {
 			})
 			.sort({[sortCond]: sortVal})
 			.skip(skip)
-			.limit(12)
+			.limit(6)
 			.exec(function(err, objects) { if(err) {
 				res.json({success: 0, info: "bsCtersAjax, ObjDB.find, Error"})
 			} else {
