@@ -17,13 +17,28 @@ block content
 		.row.text-center
 			.col-3
 				a.btn.btn-danger(href="/bsOrderDel/"+order._id) 删除
-			.col-3
-			.col-3 
-				if order.status == 0
-					-a;
-					a.btn.btn-warning(href="/bsOrderEnd/"+order._id) 发货
-				else
+			if order.status == 0
+				-a;
+				.col-6
+					form#form(method="post", action="/bsOrderEnd", enctype="multipart/form-data")
+						input(type="hidden", name="obj[id]", value=order._id)
+						.form-group.row
+							.col-6
+								input#ctAtIpt.datepicker.form-control(type="text", name="obj[edAt]", readonly="readonly", placeholder="选择发货时间, 可不选择")
+							.col-6
+								input.btn.btn-warning(type="submit" value="发货")
+			else
+				.col-3 
+				.col-3
 					button.btn.btn-sencondary(type="button") 已经发货
 			.col-3#print
 				button.btn.btn-link.btn-block(type="button") <span class="oi oi-print"></span>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	//- <link rel="stylesheet" href="/resources/demos/style.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	//- timepicker
+	link(rel="stylesheet", href="/libs/jt.timepicker/jquery.timepicker.css")
+	script(src="/libs/jt.timepicker/jquery.timepicker.min.js")
+
 	script(src="/js/bser/order/detail/detail.js")

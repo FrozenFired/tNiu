@@ -1,4 +1,6 @@
 $( function() {	
+	$(".datepicker").datepicker();
+
 	$("#genreIpt").change(function(e) {
 		let str = ($(this).val()).split('-');
 		$("#genre").val(str[0]);

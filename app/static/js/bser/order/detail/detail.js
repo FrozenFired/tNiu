@@ -1,4 +1,6 @@
 $( function() {
+	$(".datepicker").datepicker();
+	
 	$("#downBtn").click(function(e) {
 		$(".downBtn").toggle()
 	})

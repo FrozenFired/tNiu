@@ -35,7 +35,8 @@ exports.bsOrder = function(req, res) {
 
 exports.bsOrderEnd = function(req, res) {
 	let crUser = req.session.crUser;
-	let id = req.params.id
+	let obj = req.body.obj
+	let id = obj.id;
 	Order.findOne({_id: id})
 	.exec(function(err, order) {
 		if(err) {
@@ -51,7 +52,11 @@ exports.bsOrderEnd = function(req, res) {
 			}
 			order.ship = parseInt(ship);
 			order.imp = ship * parseFloat(order.price);
-			order.edAt = Date.now();
+			if(obj.edAt) {
+				order.edAt = new Date(obj.edAt+" 22:00:00");
+			} else {
+				order.edAt = Date.now();
+			}
 			order.save(function(err, objSv) {
 				if(err) console.log(err);
 				res.redirect('/bsOrder/'+id);
@@ -104,7 +109,7 @@ exports.bsOrders = function(req, res) {
 	let symAtFm = "$gte";
 	let condAtFm = new Date(new Date().setHours(0, 0, 0, 0))
 	let symAtTo = "$lte";
-	let condAtTo = new Date(new Date().setHours(23, 59, 59, 0)) 
+	let condAtTo = new Date(new Date().setHours(23, 59, 59, 999)) 
 	if(condSts == 0) {
 		symAtFm = "$ne";
 		condAtFm = randNum;
@@ -117,7 +122,7 @@ exports.bsOrders = function(req, res) {
 	}
 	if(req.query.atTo && req.query.atTo.length == 10){
 		symAtTo = "$lte";
-		condAtTo = new Date(req.query.atTo).setHours(23,59,59,0);
+		condAtTo = new Date(req.query.atTo).setHours(23,59,59,999);
 	}
 
 	let symGenre = "$ne";
@@ -217,14 +222,18 @@ exports.bsOrderNew = function(req, res) {
 
 	obj.firm = crUser.firm;
 	obj.creater = crUser._id;
-	obj.ctAt = Date.now();
 
 	let st = new Date(new Date().setHours(0, 0, 0, 0));
 	let ed = new Date(new Date().setHours(23, 59, 59, 999));
-	let today =parseInt(moment(Date.now()).format('YYMMDD'))
+	if(obj.ctAt) {
+		st = new Date(obj.ctAt+" 00:00:00")
+		ed = new Date(obj.ctAt+" 23:59:59:999")
+	}
+	let today =parseInt(moment(st).format('YYMMDD'))
 	Order.find({
 		'ctAt': {'$gte': st, '$lte': ed},
 	})
+	.sort({'ctAt': -1})
 	.exec(function(err, orders){
 		if(err) console.log(err);
 		let leng = orders.length+1;
@@ -232,6 +241,15 @@ exports.bsOrderNew = function(req, res) {
 			leng = "0" + leng;
 		}
 		obj.code = obj.genre+today+leng;
+		if(orders && orders.length == 0) {
+			obj.ctAt = st;
+		} else {
+			if(obj.ctAt) {
+				obj.ctAt = orders[0].ctAt.getTime() + 1;
+			} else {
+				obj.ctAt = Date.now();
+			}
+		}
 		let _order = new Order(obj)
 		_order.save(function(err, objSv) {
 			if(err) console.log(err);

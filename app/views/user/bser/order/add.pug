@@ -34,6 +34,10 @@ block content
 						.col-10
 							input#noteIpt.form-control(type="text", name="obj[note]")
 					.form-group.row
+						label.col-2.col-form-label.text-right(for="ctAtIpt") 收货时间
+						.col-10
+							input#ctAtIpt.datepicker.form-control(type="text", name="obj[ctAt]", readonly="readonly", placeholder="选择收货时间, 可不选择")
+					.form-group.row
 						label.col-2.col-form-label.text-right(for="tmpletIpt") 模板
 						.col-4
 							input#ajaxTmplet.form-control(type="text", autocomplete="off")
@@ -52,6 +56,14 @@ block content
 					.form-group.row.mt-5
 						.offset-sm-10.col-sm-2
 							input.btn.btn-success.btn-block(type="submit" value="添加")
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	//- <link rel="stylesheet" href="/resources/demos/style.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	//- timepicker
+	link(rel="stylesheet", href="/libs/jt.timepicker/jquery.timepicker.css")
+	script(src="/libs/jt.timepicker/jquery.timepicker.min.js")
+
 	script(src="/js/bser/order/add/add.js")
 	script(src="/js/bser/order/add/client.js")
 	script(src="/js/bser/order/add/tmplet.js")

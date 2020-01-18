@@ -23,7 +23,7 @@ if order.firm
 		h4 电话: #{cterCp.tel}
 	.col-sm-4
 		h5 No: #{order.code}
-		h5 收货时间: #{moment(order.ctAt).format('DD/MM/YYYY HH:mm')}
+		h5 收货时间: #{moment(order.ctAt).format('DD/MM/YYYY')}
 		if order.edAt
 			- edAt = order.edAt;
-			h5 发货日期: #{moment(edAt).format('DD/MM/YYYY HH:mm')}
+			h5 发货日期: #{moment(edAt).format('DD/MM/YYYY')}

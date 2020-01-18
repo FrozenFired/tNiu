@@ -66,7 +66,7 @@ module.exports = function(app){
 
 	app.get('/bsOrder/:id', MdRole.bserIsLogin, Order.bsOrder);
 	app.get('/bsOrderDel/:id', MdRole.bserIsLogin, Order.bsOrderDel)
-	app.get('/bsOrderEnd/:id', MdRole.bserIsLogin, Order.bsOrderEnd)
+	app.post('/bsOrderEnd', MdRole.bserIsLogin, postForm, Order.bsOrderEnd)
 
 	app.get('/bsOrderClUpAjax', MdRole.bserIsLogin, Order.bsOrderClUpAjax)
 
