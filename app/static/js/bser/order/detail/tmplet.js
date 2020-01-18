@@ -8,7 +8,7 @@ $(function() {
 				ships += sp;
 			}
 		});
-		$("#ship").text(ships+ ' ( ' + ships*order.price + '€ )');
+		$("#ship").text(ships+ ' ( ' + (ships*order.price).toFixed(2) + '€ )');
 	}
 	shipsVal();
 	$(".ship").change(function(e) {
