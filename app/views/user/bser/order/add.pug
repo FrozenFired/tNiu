@@ -38,10 +38,6 @@ block content
 						.col-10
 							input#ctAtIpt.datepicker.form-control(type="text", name="obj[ctAt]", readonly="readonly", placeholder="选择收货时间, 可不选择")
 					.form-group.row
-						label.col-2.col-form-label.text-right(for="tmpletIpt") 模板
-						.col-4
-							input#ajaxTmplet.form-control(type="text", autocomplete="off")
-							input#tmpletId(type="hidden", name="obj[tmplet]")
 						label.col-2.col-form-label.text-right(for="genreIpt") 类型
 						.col-4
 							select#genreIpt.form-control(data-style="btn-info")
@@ -51,6 +47,10 @@ block content
 									option(value=genre.genre+'-'+genre.price) #{genre.genre}: #{genre.price}€
 						input#genre(type="hidden", name="obj[genre]")
 						input#price(type="hidden", name="obj[price]")
+						label.col-2.col-form-label.text-right(for="tmpletIpt") 模板
+						.col-4
+							input#ajaxTmplet.form-control(type="text", autocomplete="off")
+							input#tmpletId(type="hidden", name="obj[tmplet]")
 					#tmplets
 					#tmpletCls
 					.form-group.row.mt-5

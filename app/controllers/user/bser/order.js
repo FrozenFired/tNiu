@@ -25,7 +25,7 @@ exports.bsOrder = function(req, res) {
 		} else {
 			// console.log(order)
 			res.render('./user/bser/order/detail', {
-				title : '订单列表',
+				title : '订单详情',
 				crUser: crUser,
 				order : order
 			});
@@ -60,6 +60,52 @@ exports.bsOrderEnd = function(req, res) {
 			order.save(function(err, objSv) {
 				if(err) console.log(err);
 				res.redirect('/bsOrder/'+id);
+			})
+		}
+	})
+}
+
+exports.bsOrderUp = function(req, res) {
+	let crUser = req.session.crUser;
+	let id = req.params.id;
+	Order.findOne({_id: id})
+	.populate('cter', 'nome')
+	.populate('firm')
+	.populate('tmplet')
+	.exec(function(err, order) {
+		if(err) {
+			info = "bsOrders, Order.findOne, Error";
+			Err.usError(req, res, info);
+		} else {
+			// for(let i=0; i<order.colors.length; i++) {
+			// 	console.log("------------")
+			// 	console.log(order.colors[i])
+			// 	console.log("------------")
+			// }
+			Cter.find({'firm': crUser.firm})
+			.exec(function(err, cters) {
+				if(err) console.log(err);
+				Firm.findOne({_id: crUser.firm})
+				.exec(function(err, firm) {
+					if(err) {
+						console.log(err);
+						info = "bsOrderAdd, Firm.findOne, Error!";
+						Err.usError(req, res, info);
+					} if(!firm || !firm.genres || firm.genres.length<0) {
+						console.log(firm)
+						info = "请在公司页面设置，染洗类型";
+						Err.usError(req, res, info);
+					} else {
+						res.render('./user/bser/order/update', {
+							title : '订单更新',
+							crUser: crUser,
+							order : order,
+
+							cters : cters,
+							genres: firm.genres,
+						});
+					}
+				})
 			})
 		}
 	})
@@ -255,6 +301,74 @@ exports.bsOrderNew = function(req, res) {
 			if(err) console.log(err);
 			res.redirect('/bsOrders')
 		})
+	})
+}
+
+exports.bsOrderUpd = function(req, res) {
+	let crUser = req.session.crUser;
+	let obj = req.body.obj;
+	let orgId = req.body.orgId;
+	obj.price = parseFloat(obj.price);
+	let colors = new Array();
+	for(let iCl in obj.colors) {
+		let color = obj.colors[iCl];
+		let et = parseInt(color.extent)
+		if(isNaN(et) || et < 1) continue;
+		color.extent = et;
+		colors.push(color);
+	}
+	obj.colors = colors;
+	obj.firm = crUser.firm;
+	obj.creater = crUser._id;
+
+	Order.findOne({_id: orgId}, function(err, order) {
+		if(err) console.log(err);
+		if(moment(order.ctAt).format("DD/MM/YYYY") == obj.ctAt) {
+			obj.code = order.code;
+			obj.ctAt = order.ctAt;
+			let _order = new Order(obj)
+			_order.save(function(err, objSv) {
+				if(err) console.log(err);
+				Order.deleteOne({_id: orgId}, function(err, rdrm) {
+					if(err) console.log(err);
+				})
+				res.redirect('/bsOrders')
+			})
+		} else {
+			let st = new Date(new Date().setHours(0, 0, 0, 0));
+			let ed = new Date(new Date().setHours(23, 59, 59, 999));
+			if(obj.ctAt) {
+				st = new Date(obj.ctAt+" 00:00:00")
+				ed = new Date(obj.ctAt+" 23:59:59:999")
+			}
+			let today =parseInt(moment(st).format('YYMMDD'))
+			Order.find({
+				'ctAt': {'$gte': st, '$lte': ed},
+			})
+			.sort({'ctAt': -1})
+			.exec(function(err, orders){
+				if(err) console.log(err);
+				let leng = orders.length+1;
+				for(let iLen = (leng + "").length; iLen < 3; iLen = leng.length) { // 序列号补0
+					leng = "0" + leng;
+				}
+				obj.code = obj.genre+today+leng;
+				if(orders && orders.length == 0) {
+					obj.ctAt = st;
+				} else {
+					obj.ctAt = orders[0].ctAt.getTime() + 1;
+				}
+
+				let _order = new Order(obj)
+				_order.save(function(err, objSv) {
+					if(err) console.log(err);
+					Order.deleteOne({_id: orgId}, function(err, rdrm) {
+						if(err) console.log(err);
+					})
+					res.redirect('/bsOrders')
+				})
+			})
+		}
 	})
 }
 

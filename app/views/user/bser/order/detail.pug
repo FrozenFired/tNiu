@@ -31,8 +31,10 @@ block content
 				.col-3 
 				.col-3
 					button.btn.btn-sencondary(type="button") 已经发货
-			.col-3#print
-				button.btn.btn-link.btn-block(type="button") <span class="oi oi-print"></span>
+			.col-2
+				a.btn.btn-link(href="/bsOrderUp/"+order._id) <span class="oi oi-pencil"></span>
+			.col-1#print
+				button.btn.btn-info(type="button") <span class="oi oi-print"></span>
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	//- <link rel="stylesheet" href="/resources/demos/style.css">
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>

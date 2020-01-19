@@ -63,8 +63,10 @@ module.exports = function(app){
 	app.get('/bsOrders', MdRole.bserIsLogin, Order.bsOrders);
 	app.get('/bsOrderAdd', MdRole.bserIsLogin, Order.bsOrderAdd);
 	app.post('/bsOrderNew', MdRole.bserIsLogin, postForm, Order.bsOrderNew)
+	app.post('/bsOrderUpd', MdRole.bserIsLogin, postForm, Order.bsOrderUpd)
 
 	app.get('/bsOrder/:id', MdRole.bserIsLogin, Order.bsOrder);
+	app.get('/bsOrderUp/:id', MdRole.bserIsLogin, Order.bsOrderUp);
 	app.get('/bsOrderDel/:id', MdRole.bserIsLogin, Order.bsOrderDel)
 	app.post('/bsOrderEnd', MdRole.bserIsLogin, postForm, Order.bsOrderEnd)
 
