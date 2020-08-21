@@ -20,13 +20,15 @@ block content
 			-a;
 			.card.order.bg-light.text-dark.mt-3.p-3
 				.row
-					.col-12.col-md-4
+					.col-12.col-md-3
 						a.btn.btn-default.text-dark(href="/bsOrder/"+order._id): h3 #{order.code}
-					.col-12.col-md-4
+					.col-12.col-md-3
 						if order.tmplet
 							-tmplet = order.tmplet;
 							h3 #{tmplet.code} #{tmplet.nome}
-					.col-12.col-md-4
+					.col-12.col-md-3
+						h3 #{order.drap}
+					.col-12.col-md-3
 						if order.cter
 							-cter = order.cter;
 							h3.toCter(id=order.code+'-'+cter._id) #{cter.nome}
