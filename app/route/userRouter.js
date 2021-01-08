@@ -61,6 +61,7 @@ module.exports = function(app){
 
 	/* ======================================== order ======================================== */
 	app.get('/bsOrders', MdRole.bserIsLogin, Order.bsOrders);
+	app.get('/api/bsOrders', MdRole.bserIsLogin, Order.apiBsOrders);
 	app.get('/bsOrderAdd', MdRole.bserIsLogin, Order.bsOrderAdd);
 	app.post('/bsOrderNew', MdRole.bserIsLogin, postForm, Order.bsOrderNew)
 	app.post('/bsOrderUpd', MdRole.bserIsLogin, postForm, Order.bsOrderUpd)

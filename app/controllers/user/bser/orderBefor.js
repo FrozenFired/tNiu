@@ -127,35 +127,6 @@ exports.bsOrderDel = function(req, res) {
 
 exports.bsOrders = function(req, res) {
 	let crUser = req.session.crUser;
-	Firm.findOne({_id: crUser.firm})
-	.exec(function(err, firm) {
-		if(err) {
-			console.log(err);
-			info = "bsOrderAdd, Firm.findOne, Error!";
-			Err.usError(req, res, info);
-		} if(!firm || !firm.genres || firm.genres.length<0) {
-			console.log(firm)
-			info = "请在公司页面设置，染洗类型";
-			Err.usError(req, res, info);
-		} else {
-			res.render('./user/bser/order/list', {
-				title : '订单列表',
-				genres: firm.genres,
-				crUser: crUser
-			});
-		}
-	})
-	// res.render('./user/bser/order/list', {
-	// 	title : '订单列表',
-	// 	crUser: crUser,
-	// 	orders : orders,
-	// 	status : condSts,
-	// 	condGenre: condGenre,
-	// 	keyword: keyword
-	// });
-}
-const bsOrdersParam = (req, res) => {
-	let crUser = req.session.crUser;
 
 	let keytype = "tcode", keyword = "";
 	if(req.query.keyword) keyword = req.query.keyword;
@@ -180,18 +151,17 @@ const bsOrdersParam = (req, res) => {
 		}
 	}
 
-	let symGenre = "$ne";
-	let condGenre = null;
-	if(req.query.genre && req.query.genre != 0) {
-		symGenre = "$eq";
-		condGenre = req.query.genre;
-	}
-
 	let randNum = 1546484;
-	symAtFm = "$ne";
-	condAtFm = randNum;
-	symAtTo = "$ne";
-	condAtTo = randNum;
+	let symAtFm = "$gte";
+	let condAtFm = new Date(new Date().setHours(0, 0, 0, 0))
+	let symAtTo = "$lte";
+	let condAtTo = new Date(new Date().setHours(23, 59, 59, 999)) 
+	if(condSts == 0) {
+		symAtFm = "$ne";
+		condAtFm = randNum;
+		symAtTo = "$ne";
+		condAtTo = randNum;
+	}
 	if(req.query.atFm && req.query.atFm.length == 10){
 		symAtFm = "$gte";   // $ ne eq gte gt lte lt
 		condAtFm = new Date(req.query.atFm).setHours(0,0,0,0);
@@ -201,101 +171,57 @@ const bsOrdersParam = (req, res) => {
 		condAtTo = new Date(req.query.atTo).setHours(23,59,59,999);
 	}
 
-	let symEdFm = "$ne";
-	let condEdFm = randNum
-	let symEdTo = "$ne";
-	let condEdTo = randNum;
-	if(req.query.edFm && req.query.edFm.length == 10){
-		symEdFm = "$gte";   // $ ne eq gte gt lte lt
-		condEdFm = new Date(req.query.edFm).setHours(0,0,0,0);
-	}
-	if(req.query.edTo && req.query.edTo.length == 10){
-		symEdTo = "$lte";
-		condEdTo = new Date(req.query.edTo).setHours(23,59,59,999);
+	let symGenre = "$ne";
+	let condGenre = null;
+	if(req.query.genre && req.query.genre != 0) {
+		symGenre = "$eq";
+		condGenre = req.query.genre;
 	}
 
-	let param;
-	// param = {
-	// 	'firm': crUser.firm,
-	// 	'status': {[symSts]: condSts},
-	// 	'genre': {[symGenre]: condGenre},
-	// 	'cter': {[symCter]: condCter},
-	// 	'ctAt': {[symAtFm]: condAtFm, [symAtTo]: condAtTo},
-	// 	'edAt': {[symEdFm]: condEdFm, [symEdTo]: condEdTo},
-	// 	'colors.code': new RegExp(keyword + '.*'),
-	// };
-	// console.log(condSts)
-	if(condSts == 0) {
-		param = {
-			'firm': crUser.firm,
-			'status': {[symSts]: condSts},
-			'genre': {[symGenre]: condGenre},
-			'cter': {[symCter]: condCter},
-			'ctAt': {[symAtFm]: condAtFm, [symAtTo]: condAtTo},
-			'colors.code': new RegExp(keyword + '.*'),
-		};
-	} else if(condSts == 1) {
-		param = {
-			'firm': crUser.firm,
-			'status': {[symSts]: condSts},
-			'genre': {[symGenre]: condGenre},
-			'cter': {[symCter]: condCter},
-			'ctAt': {[symAtFm]: condAtFm, [symAtTo]: condAtTo},
-			'edAt': {[symEdFm]: condEdFm, [symEdTo]: condEdTo},
-			'colors.code': new RegExp(keyword + '.*'),
-		};
-	} else if(condSts == -1) {
-		param = {
-			'firm': crUser.firm,
-			'genre': {[symGenre]: condGenre},
-			'cter': {[symCter]: condCter},
-			'colors.code': new RegExp(keyword + '.*'),
-			$or:[
-				{'status': 0, 'ctAt': {[symAtFm]: condAtFm, [symAtTo]: condAtTo}},
-				{'status': 1, 'ctAt': {[symAtFm]: condAtFm, [symAtTo]: condAtTo}, 'edAt': {[symEdFm]: condEdFm, [symEdTo]: condEdTo}},
-			]
-		};
-	} else {
-		param = {'firm': null, 'status': 100};
-	}
-
-	return param;
-}
-exports.apiBsOrders = async(req, res) => {
-	// let page = 1;
-	// if(req.query.page && !isNaN(parseInt(req.query.page))) {
-	// 	page = parseInt(req.query.page);
-	// }
-	// let pagesize = 30;
-	// if(req.query.pagesize && !isNaN(parseInt(req.query.pagesize))) {
-	// 	pagesize = parseInt(req.query.pagesize);
-	// }
-	// let skip = (page-1)*pagesize;
-
-	const param = bsOrdersParam(req, res);
-	// console.log(param)
-	try {
-		// let count = await Order.countDocuments(param);
-
-		let orders = await Order.find(param)
-		// .skip(skip).limit(pagesize)
-		.populate('cter', 'nome')
-		.populate('tmplet')
-		.sort({"ctAt": -1})
-		
-		// let isMore = 1;
-		// if(page*pagesize >= count) isMore = 0;
-
-		return res.status(200).json({
-			status: 200,
-			message: '成功获取',
-			data: {orders}
-			// data: {orders, count, page, isMore}
-		});
-	} catch(error) {
-		console.log(error)
-		return res.json({status: 500, message: '系统错误, 请联系管理员。 错误码: get/api/bsOrders[1]'})
-	}
+	Order.find({
+		'firm': crUser.firm,
+		'status': {[symSts]: condSts},
+		'genre': {[symGenre]: condGenre},
+		'cter': {[symCter]: condCter},
+		'ctAt': {[symAtFm]: condAtFm, [symAtTo]: condAtTo},
+		// $or:[
+		// 	{'tcode': new RegExp(keyword + '.*')},
+		// 	{'colors.code': new RegExp(keyword + '.*')},
+		// ],
+		'colors.code': new RegExp(keyword + '.*'),
+	})
+	.populate('cter', 'nome')
+	.populate('tmplet')
+	.sort({"status": 1, "ctAt": -1})
+	.exec(function(err, orders) {
+		if(err) {
+			info = "bsOrders, User.find, Error";
+			Err.usError(req, res, info);
+		} else {
+			Firm.findOne({_id: crUser.firm})
+			.exec(function(err, firm) {
+				if(err) {
+					console.log(err);
+					info = "bsOrderAdd, Firm.findOne, Error!";
+					Err.usError(req, res, info);
+				} if(!firm || !firm.genres || firm.genres.length<0) {
+					console.log(firm)
+					info = "请在公司页面设置，染洗类型";
+					Err.usError(req, res, info);
+				} else {
+					res.render('./user/bser/order/list', {
+						title : '订单列表',
+						crUser: crUser,
+						orders : orders,
+						status : condSts,
+						genres: firm.genres,
+						condGenre: condGenre,
+						keyword: keyword
+					});
+				}
+			})
+		}
+	})
 }
 
 exports.bsOrderAdd = function(req, res) {
