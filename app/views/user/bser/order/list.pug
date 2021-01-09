@@ -48,9 +48,12 @@ block content
 					input#cterId.form-control(type="hidden", autocomplete="off", name="cter")
 				//- .col-md-2
 				.col-md-2.pt-2
-					strong
-						span.mr-2 总米数:
+					strong.strongElem#extentsElem
+						span.mr-2 收货米数:
 						span#extents
+					strong.strongElem#shipsElem(style="display:none")
+						span.mr-2 发货米数:
+						span#ships
 		.topNav-third.p-1
 			.row
 				.col-md-1.pt-2.text-right 收货时间:
@@ -78,7 +81,10 @@ block content
 								button.cncAt.btn.btn-outline-dark(type="button") X
 								.col-md-2
 				.col-md-2.pt-2
-					strong
+					strong.strongElem#priceElem
+						span.mr-2 预计金额:
+						span#price
+					strong.strongElem#impElem(style="display:none")
 						span.mr-2 总金额:
 						span#imp
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">

@@ -36,7 +36,9 @@ $(()=> {
 		// console.log(orders)
 		$(".ordersElement").remove();
 		let extents = 0;
+		let ships = 0;
 		let imp = 0;
+		let price = 0;
 		let str = "";
 		for(i in orders) {
 			let order = orders[i];
@@ -67,11 +69,18 @@ $(()=> {
 				str += '</div>'
 				str += '<div class="row">'
 					let extentTot = 0;
+					let shipTot = 0;
 					for(j in order.colors) {
 						let color = order.colors[j];
-						if(!isNaN(parseInt(color.extent)) && !isNaN(parseFloat(order.price))) {
-							extents += parseInt(color.extent);
-							extentTot += parseInt(color.extent);
+						if(!isNaN(parseFloat(order.price))) {
+							if(!isNaN(parseInt(color.extent))) {
+								extents += parseInt(color.extent);
+								extentTot += parseInt(color.extent);
+							}
+							if(!isNaN(parseInt(color.ship))) {
+								ships += parseInt(color.ship);
+								shipTot += parseInt(color.ship);
+							}
 						}
 						str += '<div class="col-6 col-md-4">'
 							if(order.status == 0){
@@ -81,18 +90,33 @@ $(()=> {
 								str += '<span class="text-warning">['+color.code+' '+color.color+' '+color.ship+'米]</span>';
 						str += '</div>'
 					}
-					str += '<div class="col-6 col-md-4">'
-						str += '<h4 class="text-warning">总米数： '+extentTot+'</h4>'
+				str += '</div>'
+				str += '<div class="row">'
+					str += '<div class="col-md-4">'
+						str += '<h4 class="text-warning">收货米数： '+extentTot+'</h4>'
 					str += '</div>'
-					str += '<div class="col-6 col-md-4">'
-						str += '<h4 class="text-warning">总价格： '+ (extentTot * order.price).toFixed(2) + '</h4>'
-					str += '</div>'
+					if(order.status == 0) {
+						str += '<div class="col-md-4">'
+							str += '<h4 class="text-warning">预计价格： '+ (extentTot * order.price).toFixed(2) + '</h4>'
+						str += '</div>'
+					}
+					if(order.status == 1) {
+						str += '<div class="col-md-4">'
+							str += '<h4 class="text-info">发货米数： '+shipTot+'</h4>'
+						str += '</div>'
+						str += '<div class="col-md-4">'
+							str += '<h4 class="text-info">价格： '+ (shipTot * order.price).toFixed(2) + '</h4>'
+						str += '</div>'
+					}
 				str += '</div>'
 			str += '</div>'
 
-			imp += extentTot * order.price;
+			price += extentTot * order.price;
+			imp += shipTot * order.price;
 		}
 		$("#ordersElement").append(str);
+		$("#ships").text(ships)
+		$("#price").text(price.toFixed(2))
 		$("#extents").text(extents)
 		$("#imp").text(imp.toFixed(2))
 	}
@@ -120,6 +144,16 @@ $(()=> {
 	getOrders();
 
 	$("#statusBtn").change(function() {
+		const status = $(this).val();
+		console.log(status)
+		$(".strongElem").hide();
+		if(status == 1) {
+			$("#shipsElem").show();
+			$("#impElem").show();
+		} else if(status == 0) {
+			$("#extentsElem").show();
+			$("#priceElem").show();
+		}
 		getOrders();
 	})
 	$("#genreSel").change(function() {
