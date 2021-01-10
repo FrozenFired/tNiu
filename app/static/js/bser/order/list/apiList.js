@@ -45,7 +45,7 @@ $(()=> {
 			str += '<div class="ordersElement card order bg-light text-dark mt-3 p-3">'
 				str += '<div class="row">'
 					str += '<div class="col-12 col-md-3">'
-						str += '<a class="btn btn-default text-dark" href="/bsOrder/'+order._id+'">'
+						str += '<a class="btn btn-default text-dark" target="_blank" href="/bsOrder/'+order._id+'">'
 							let codeTextColor = "text-dark";
 							if(order.status == 1) codeTextColor = "text-success";
 							str += '<h3 class="'+codeTextColor+'">'+order.code+'</h3>'
@@ -153,6 +153,8 @@ $(()=> {
 		} else if(status == 0) {
 			$("#extentsElem").show();
 			$("#priceElem").show();
+		} else if(status == -1){
+			$("#extentsElem").show();
 		}
 		getOrders();
 	})
