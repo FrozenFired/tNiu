@@ -1,25 +1,25 @@
 .row
-	.col-6
+	.col-7
 		table.table(style="font-size:25px;")
 			thead
-				tr.row
-					th.col-3.border.border-dark 型号
-					th.col-3.border.border-dark 颜色
-					th.col-3.border.border-dark 米数
-					th.col-3.border.border-dark 发货米数
+				tr
+					th.border.border-dark(width="20%") 型号
+					th.border.border-dark(width="20%") 颜色
+					th.border.border-dark(width="20%") 米数
+					th.border.border-dark 发货米数
 			tbody
 				- let extents = 0, iTr=0;
 				each color in order.colors
 					- iTr++;
 					if !isNaN(parseInt(color.extent))
 						-extents += parseInt(color.extent);
-					tr.row
-						td.col-3.border.border-dark #{color.code}
-						td.col-3.border.border-dark #{color.color}
-						td.col-3.border.border-dark 
+					tr
+						td.border.border-dark #{color.code}
+						td.border.border-dark #{color.color}
+						td.border.border-dark 
 							span #{color.extent}
 							input(id='et-'+color._id, type="hidden", value=color.extent)
-						td.col-3.border.border-dark
+						td.border.border-dark
 							if order.status == 0
 								-a;
 								input.form-control.ship(type="number", id=order._id+'-'+color._id, autocomplete="off", value=color.ship)
@@ -27,21 +27,21 @@
 								span #{color.ship}
 				while iTr < 5
 					-iTr++;
-					tr.row
-						td.col-3.border.border-dark &nbsp;
-						td.col-3.border.border-dark
-						td.col-3.border.border-dark
-						td.col-3.border.border-dark
-				tr.row
-					td.col-6(colspan=2)
-					td.col-3.border.border-dark #{extents}
-					td.col-3.border.border-dark.text-center
+					tr
+						td.border.border-dark &nbsp;
+						td.border.border-dark
+						td.border.border-dark
+						td.border.border-dark
+				tr
+					td(colspan=2)
+					td.border.border-dark #{extents}
+					td.border.border-dark.text-center
 						if order.status == 0
 							-a;
 							#ship
 						else
 							span #{order.ship} / #{order.imp}
-	.col-6.text-center
+	.col-5.text-center
 		img(src=order.photo, width="400px")
 
 script(src="/js/bser/order/detail/tmplet.js")
